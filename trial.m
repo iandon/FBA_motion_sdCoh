@@ -1,4 +1,4 @@
-function   [fixBreak, resp, allPosPix, timestamp] = trial(wPtr,trialAngle,baseAngle,blockNum,sesNum, trialNum ,cueType,SOA,dotCoh)
+function   [fixBreak, resp, allPosPix, timestamp] = trial(wPtr,trialAngle,baseAngle,blockNum,sesNum, trialNum ,cueType,SOA,dotCoh,ansResp)
 global params;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,7 +18,7 @@ timestamp.ts=0;
 %%%%% initialize dot positions for the two aperture
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[allPosPix.cue]= computeMotion_Target(baseAngle,dotCoh,cueType);
+[allPosPix.cue]= computeMotion_Cue(baseAngle,cueType);
 [allPosPix.target]= computeMotion_Target(trialAngle,dotCoh);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,15 +85,14 @@ clear FirstFixClock tsFirstFix;
 
 
 fixBreak = 0;
-ts = 0;
-trialStart = tic;
 
-if params.eye.run, chk = 1; else chk = 3; end
+
+if params.eye.run, chk = 1; [fixBreak] = fixCheck; else chk = 3; end
 
 trlStart = chk; preCueON = chk; preCueOFF = chk; stimON = chk; stimOFF = chk; postCueON = chk;
 
-if params.eye.run, [fixBreak] = fixCheck; end
-
+ts = 0; 
+trialStart = tic;
 while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
     ts = toc(trialStart);
     [keyIsDown, secs, keyCode] = KbCheck; pressQ = keyCode(KbName('Q'));
@@ -104,7 +103,7 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if trlStart < 2, trlStart = trlStart + 1; end
     elseif ts < cumulativeDur.preCue
         if preCueON == 1, Eyelink('Message', sprintf('PreCue ON')); end
-        moveDots(allPosPix.cue,wPtr,trialAngle,0);
+        moveDots(allPosPix.cue,wPtr,0);
         timestamp.preCue = ts;
         if preCueON < 2, preCueON = preCueON + 1; end
     elseif ts < cumulativeDur.ISIpre
@@ -114,7 +113,7 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if preCueOFF < 2 , preCueOFF = preCueOFF + 1; end
     elseif ts < cumulativeDur.stim
         if stimON == 1, Eyelink('Message', sprintf('Stimulus ON')); end
-        moveDots(allPosPix.target, wPtr, trialAngle,1); %%%%% draw dots
+        moveDots(allPosPix.target, wPtr,1); %%%%% draw dots
         fixation(wPtr); Screen('Flip', wPtr);
         timestamp.stim = ts;
         if stimON < 2, stimON = stimON + 1; end
@@ -150,7 +149,7 @@ if fixBreak
 else
     if params.eye.run, Eyelink('Message', sprintf('Post Cue OFF')); end
     fixation(wPtr); Screen('Flip', wPtr); resp = response;
-    correctTrial = checkResp(resp, trialAngle); 
+    correctTrial = checkResp(resp, ansResp); 
     audFB(correctTrial);
     resp.correct = correctTrial;
     timestamp.resp = ts;

@@ -7,7 +7,7 @@ if stimOrPreCue == 1
     durInFrames = params.stim.durInFrames;
     dotColor = params.stim.color;
 else
-    durInFrames = params.preCueVars.durInFrames;
+    durInFrames = params.preCue.durInFrames;
     dotColor = params.preCue.color;
 end
 
@@ -16,12 +16,12 @@ stimDuration = tic;
 
 while currentFrame <= durInFrames;
     allDots = [allPosPix.x(:,currentFrame), allPosPix.y(:,currentFrame)]';
-    allDots = allDots-repmat(params.screenVar.centerPix', 1, size(allDots,2));
-    c = params.screenVar.centerPix;
+    allDots = allDots-repmat(params.screen.centerPix', 1, size(allDots,2));
+    c = params.screen.centerPix;
     r = params.stim.radiusPix;
     %Screen('FillOval', wPtr ,[250 0 0], round([c(1)-r c(2)-r c(1)+r c(2)+r]));
   
-    Screen('DrawDots', wPtr, allDots, params.dots.sizeInPix, dotColor, params.screenVar.centerPix,1);
+    Screen('DrawDots', wPtr, allDots, params.dots.sizeInPix, dotColor, params.screen.centerPix,1);
     fixation(wPtr);
     
     
@@ -29,7 +29,7 @@ while currentFrame <= durInFrames;
     Screen('Flip', wPtr,0,0);
     clear allDots
     
-    currentFrame = round(toc(stimDuration)*(params.screenVar.monRefresh/2));
+    currentFrame = ceil(toc(stimDuration)*(params.screen.monRefresh/2));
 end 
 
 if params.oval.fixation, fixation(wPtr); end; 

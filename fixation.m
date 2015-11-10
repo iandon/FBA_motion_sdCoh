@@ -2,25 +2,25 @@ function fixation(wPtr, trialType)
 global params;
 
 if nargin<2
-    xHR= params.screenVar.centerPix(1)+ params.fixationVar.sizeCrossPix(1);
-    xHL = params.screenVar.centerPix(1)- params.fixationVar.sizeCrossPix(1);
-    yH = params.screenVar.centerPix(2);
-    Screen('DrawLine',wPtr,params.fixationVar.color,xHR,yH,xHL, yH,params.fixationVar.penWidthPix);
+    xHR= params.screen.centerPix(1)+ params.fixation.sizeCrossPix(1);
+    xHL = params.screen.centerPix(1)- params.fixation.sizeCrossPix(1);
+    yH = params.screen.centerPix(2);
+    Screen('DrawLine',wPtr,params.fixation.color,xHR,yH,xHL, yH,params.fixation.penWidthPix);
 
-    yVU= params.screenVar.centerPix(2)+ params.fixationVar.sizeCrossPix(2);
-    yVD = params.screenVar.centerPix(2)- params.fixationVar.sizeCrossPix(2);
-    xV = params.screenVar.centerPix(1);
-    Screen('DrawLine',wPtr,params.fixationVar.color,xV,yVU,xV, yVD,params.fixationVar.penWidthPix);
+    yVU= params.screen.centerPix(2)+ params.fixation.sizeCrossPix(2);
+    yVD = params.screen.centerPix(2)- params.fixation.sizeCrossPix(2);
+    xV = params.screen.centerPix(1);
+    Screen('DrawLine',wPtr,params.fixation.color,xV,yVU,xV, yVD,params.fixation.penWidthPix);
 elseif trialType == 0
-    xHR= params.screenVar.centerPix(1)+ params.fixationVar.sizeCrossPix(1);
-    xHL = params.screenVar.centerPix(1)- params.fixationVar.sizeCrossPix(1);
-    yH = params.screenVar.centerPix(2);
-    Screen('DrawLine',wPtr,params.fixationVar.colorDisc,xHR,yH,xHL, yH,params.fixationVar.penWidthPix);
+    xHR= params.screen.centerPix(1)+ params.fixation.sizeCrossPix(1);
+    xHL = params.screen.centerPix(1)- params.fixation.sizeCrossPix(1);
+    yH = params.screen.centerPix(2);
+    Screen('DrawLine',wPtr,params.fixation.colorDisc,xHR,yH,xHL, yH,params.fixation.penWidthPix);
 
-    yVU= params.screenVar.centerPix(2)+ params.fixationVar.sizeCrossPix(2);
-    yVD = params.screenVar.centerPix(2)- params.fixationVar.sizeCrossPix(2);
-    xV = params.screenVar.centerPix(1);
-    Screen('DrawLine',wPtr,params.fixationVar.colorDisc,xV,yVU,xV, yVD,params.fixationVar.penWidthPix);
+    yVU= params.screen.centerPix(2)+ params.fixation.sizeCrossPix(2);
+    yVD = params.screen.centerPix(2)- params.fixation.sizeCrossPix(2);
+    xV = params.screen.centerPix(1);
+    Screen('DrawLine',wPtr,params.fixation.colorDisc,xV,yVU,xV, yVD,params.fixation.penWidthPix);
 end
     
 

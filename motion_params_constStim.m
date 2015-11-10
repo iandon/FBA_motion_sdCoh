@@ -29,7 +29,7 @@ fixation.rectPix = [0 0 fixation.sizeCrossDeg(1)*screen.degratioX fixation.sizeC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 stim = struct('dur', {.2}, 'possibleAngels', {[-1 1]},'boundaryAngle', {[0 0]},...
               'radiusDeg',{3}, 'bkColor', {gray}, 'speedDegPerSec', {15},'lifetime', {1},...
-              'limitLifetime', {0.05},'apertureCenter',[-5,0,-5,0],'baseAngles', [45,225],...
+              'limitLifetime', {0.05},'apertureCenter',[-5,0,-5,0],'baseAngles', [-45,-225],...
               'angleDiff',8,'color',{black});
 % [3 357 183 177]
 %cw/ccw: Note, response is encoded in response.cw_ccw = [1 2]. Any changes must be done there as well
@@ -75,8 +75,8 @@ stim.sdVals = [.00001, .02, 4, 8, 16, 32, 48, 64];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Dot params 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dots = struct('sizeInPix', {4}, 'numDotsPerDeg',1.65);
-dots.num = round(numDotsPerDeg*(pi*(stim.radiusDeg)^2)); % 1 dot per deg/deg
+dots = struct('sizeInPix', {4}, 'numPerDeg',1.65);
+dots.num = round(dots.numPerDeg*(pi*(stim.radiusDeg)^2)); % 1 dot per deg/deg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Oval within dots params 
@@ -148,7 +148,7 @@ trial.numTrialstotal = trial.numTrialsPerBlock * block.numBlocks;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Save Data params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'});
+save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'TEST'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Text params
@@ -179,7 +179,7 @@ ISI = struct('postDur', {0.05},'preDur',{.250}); %'preOrder',2,)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Feedback params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-feedback = struct('dur', {0.1}, 'high', {1250}, 'low', {200}); 
+feedback = struct('dur', {0.1}, 'high', {500}, 'low', {200}); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     eye params
@@ -202,7 +202,7 @@ global params;
 params = struct('screen', screen, 'trial', trial, 'block', block, 'save', save,...
                 'fixation', fixation,'text',text, 'response', response, 'feedback', feedback,...
                 'stim', stim, 'ISI', ISI, 'dots', dots, 'eye', eye, 'oval', oval,...
-                'stair',stair,'preCue',preCue,'neutralCue',neutralCue); 
+                'preCue',preCue,'neutralCue',neutralCue); %'stair',stair
 cl = 1;
 if cl
     clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;

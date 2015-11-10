@@ -1,6 +1,6 @@
 function procedure = calcTrialsVars_ConstStim
 global params;  
-numTrials = params.trialVars.numTrialsPerBlock; % should be 180
+numTrials = params.trial.numTrialsPerBlock; % should be 180
 
 
 
@@ -26,15 +26,18 @@ angleDir  = angleDir(ord);
 cueType  = cueType(ord);
 sdCoh = sdCoh(ord);
 
+targetAngle = baseAngle+(angleDir*params.stim.angleDiff);
 
-ansResp = (angleDir == -1)+1;
-% SOA = repmat(params.ISIVars.preDurVect(blockNum),[numTrials,1]);
+ansResp = (angleDir == 1)+1;
+% SOA = repmat(params.ISI.preDurVect(blockNum),[numTrials,1]);
+
 
         
 procedure = cell(numTrials,1);
 for i = 1:numTrials
     procedure{i}.baseAngle = baseAngle(i);
     procedure{i}.angleDir  = angleDir(i);
+    procedure{i}.targetAngle = targetAngle(i);
     procedure{i}.cueType  = cueType(i);
     procedure{i}.sdCoh  = sdCoh(i);
     procedure{i}.ansResp  = ansResp(i);

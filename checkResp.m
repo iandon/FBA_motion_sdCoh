@@ -1,21 +1,16 @@
-function correctTrial = checkResp(resp, angleOffset)
+function correctTrial = checkResp(resp, ansResp)
 global params;
 
-angleIdx = find(angleOffset == [-1,1]);
-respIdx = find(resp.key(1) == params.responseVar.allowedRespKeysCodes);
+
+respIdx = find(resp.key(1) == params.response.allowedRespKeysCodes);
 
 
-if resp.check == 0
-    correctTrial = 2;
-elseif resp.check == 1
-    if angleIdx == respIdx
-        correctTrial = 1;
-    else
-        correctTrial = 0;
-    end
+switch resp.check
+    case 0
+        correctTrial = 2;
+    case 1
+        correctTrial = ansResp == respIdx;
 end
-
-% correctTrial;
 
 
 end

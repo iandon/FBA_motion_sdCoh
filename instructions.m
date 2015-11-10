@@ -9,15 +9,15 @@ start ='Press SPACEBAR to start the experiment';
 
 recalibrate='Oops too many fixation breaks. Please call the experimenter to recalibrate';
 
-Screen('TextSize', wPtr, params.textVars.size);
-Screen('TextColor', wPtr, params.textVars.color);
-Screen('TextBackgroundColor',wPtr, params.textVars.bkColor );
+Screen('TextSize', wPtr, params.text.size);
+Screen('TextColor', wPtr, params.text.color);
+Screen('TextBackgroundColor',wPtr, params.text.bkColor );
 
 if recal
-      Screen('DrawText', wPtr, recalibrate, params.screenVar.centerPix(1)-450, params.screenVar.centerPix(2)-150);
+      Screen('DrawText', wPtr, recalibrate, params.screen.centerPix(1)-450, params.screen.centerPix(2)-150);
 else  
-Screen('DrawText', wPtr, instruct, params.screenVar.centerPix(1)-250, params.screenVar.centerPix(2)-150);
-Screen('DrawText', wPtr, start, params.screenVar.centerPix(1)-250, params.screenVar.centerPix(2)+150);
+Screen('DrawText', wPtr, instruct, params.screen.centerPix(1)-400, params.screen.centerPix(2)-150);
+Screen('DrawText', wPtr, start, params.screen.centerPix(1)-250, params.screen.centerPix(2)+150);
 end  
 Screen('Flip', wPtr);
 

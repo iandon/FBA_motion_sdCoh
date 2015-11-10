@@ -5,15 +5,14 @@ dxdy = zeros(params.dots.num,2);
 
 numDots = params.dots.num;
 
-if cue_OR_target == 1 %target
-    trialAngle_AllDots =  normrnd(trialAngle,dotCohSD,numDots,1);
-%     dotColor = params.stim.color;
-end
 
-dxdy_dirc 	= params.stim.speedDegPerSec .* (1/params.screenVar.monRefresh) .* [cos(pi*trialAngle_AllDots/180.0) sin(pi*trialAngle_AllDots/180.0)];
+trialAngle_AllDots =  normrnd(trialAngle,dotCohSD,numDots,1);
 
-dxdy(:,1) =  dxdy_dirc(:,1).*params.screenVar.degratioX;
-dxdy(:,2) =  dxdy_dirc(:,2).*params.screenVar.degratioY;
+
+dxdy_dirc 	= params.stim.speedDegPerSec .* (1/params.screen.monRefresh) .* [cos(pi*trialAngle_AllDots/180.0) sin(pi*trialAngle_AllDots/180.0)];
+
+dxdy(:,1) =  dxdy_dirc(:,1);%.*params.screen.degratioX;
+dxdy(:,2) =  dxdy_dirc(:,2);%.*params.screen.degratioY;
 
 
 % % Calculate which dots will be moving coherently to direction trial angle
@@ -37,7 +36,7 @@ allPos.y = r.*params.stim.radiusDeg.*sin(q);
 for i = 2:params.stim.durInFrames
     allPos.x(:,i) = allPos.x(:,i-1)+dxdy(:,1);
     allPos.y(:,i) = allPos.y(:,i-1)+dxdy(:,2);
-    wrap = abs(allPos.x(:,i))> params.stim.radiusDeg | abs(allPos.y(:,i))>params.stim.radiusDeg; 
+    wrap = abs(sqrt(allPos.x(:,i).^2+allPos.y(:,i).^2))> params.stim.radiusDeg; 
     if sum(wrap)>0
         allPos.x(wrap,i) = -allPos.x(wrap,i);
         allPos.y(wrap,i) = -allPos.y(wrap,i);
@@ -53,5 +52,5 @@ for i = 2:params.stim.durInFrames
     end
 end
 %Transform to pixels from visual degrees
-allPosPix.x = floor(params.screenVar.ppd .* allPos.x)+ params.screenVar.centerPix(1)-params.stim.apertureCenterPix(1); 
-allPosPix.y = floor(params.screenVar.ppd .* allPos.y)+ params.screenVar.centerPix(2)-params.stim.apertureCenterPix(2);	
+allPosPix.x = floor(params.screen.ppd .* allPos.x)+ params.screen.centerPix(1)-params.stim.apertureCenterPix(1); 
+allPosPix.y = floor(params.screen.ppd .* allPos.y)+ params.screen.centerPix(2)-params.stim.apertureCenterPix(2);	

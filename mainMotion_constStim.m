@@ -12,18 +12,18 @@ addpath(genpath(strcat(homedir,'/mgl')));
 
 
 params.eye.run = 0;
-params.stairVars.run = 0;
+params.stair.run = 0;
 params.stim.colorTest = 0;
 
 %initials = 'test'; sesNum = '0';    
 initials = input('Please enter subject initials: \n', 's'); initials = upper(initials);
 params.subj.gender = input('Please enter subject GENDER: M/F/O \n', 's');
 params.subj.age = input('Please enter subject AGE: \n', 's');
-sesNumquest = input('Please enter the session number:\n', 's'); sesNum = str2double(sesNumquest); params.saveVars.sesNum = sesNum; params.sesVar.sesNum = sesNum;
-sesTypequest = input('Test(0) or Training(1)? \n', 's'); sesType = str2double(sesTypequest); params.saveVars.sesType = sesType;
+sesNumquest = input('Please enter the session number:\n', 's'); sesNum = str2double(sesNumquest); params.save.sesNum = sesNum; params.sesVar.sesNum = sesNum;
+%sesTypequest = input('Test(0) or Training(1)? \n', 's'); sesType = str2double(sesTypequest); params.save.sesType = sesType;
 % TRAIN LOCATION is in Plexp_defs file -> Make sure it is the right one!
 
-if (sesNumquest > 1) && ~strcmp(initials,params.saveVars.SubjectInitials)
+if (sesNumquest > 1) && ~strcmp(initials,params.save.SubjectInitials)
      error('Check if settings file used is correct for this participant'); 
 end
 
@@ -78,7 +78,7 @@ fixBreak=struct('fixBreak',{0},'recal',{0},'currRunNum',{0},'numFixBreaks',{0},'
 %%%% --------------      Start experiment  --------------%%%%%
 correctTrial=zeros(params.trial.numTrialsPerBlock,params.block.numBlocks);
 trialNum = 0;
-stair = cell(params.block.numBlocks,params.stair.numStairs);
+if params.stair.run, stair = cell(params.block.numBlocks,params.stair.numStairs);end
 procedure = cell(params.block.numBlocks,1);
 for b = 1:params.block.numBlocks
 %     for stairNum = 1:params.stair.numStairs
@@ -88,7 +88,7 @@ for b = 1:params.block.numBlocks
 %                                            'gamma',params.stair.gamma,'lambda',params.stair.lambda,...
 %                                            'PF',@PAL_Weibull,'numTrials',params.stair.numTrials,'marginalize',params.stair.marginalize);
 %     end 
-    procedure{b} = calcTrialsVars_ConstStim(b);
+    procedure{b} = calcTrialsVars_ConstStim;
     blockBreak(wPtr, b);
     if params.eye.run && (b > 1)
         EyelinkDoDriftCorrect(el, params.screen.centerPix(1),...
@@ -99,8 +99,10 @@ for b = 1:params.block.numBlocks
         t=t+1;
         recal = 0;
         
-        [fixBreak.fixBreak, respTrial, timestamp] = trial(wPtr, procedure{b}{t}.targetAngle,procedure{b}{t}.baseAngle, b, sesNum, t,...
-                                                          procedure{b}{t}.cueType,procedure{b}{t}.SOA,procedure{b}{t}.dotCoh);
+        
+        
+        [fixBreak.fixBreak, respTrial, allPosPix, timestamp] = trial(wPtr, procedure{b}{t}.targetAngle,procedure{b}{t}.baseAngle, b, sesNum, t,...
+                                                          procedure{b}{t}.cueType,procedure{b}{t}.SOA,procedure{b}{t}.sdCoh,procedure{b}{t}.ansResp);
                                                       %trial(wPtr,trialAngle,baseAngle,blockNum,sesNum, trialNum ,cueType,SOA,dotCoh)
         % update trial parameters after response
         procedure{b}{t}.timestamp=timestamp;
@@ -113,6 +115,7 @@ for b = 1:params.block.numBlocks
             procedure{b}{t}.correct = respTrial.correct;
             procedure{b}{t}.rt = respTrial.rt;
             procedure{b}{t}.key = respTrial.key;
+            procedure{b}{t}.allPosPix = allPosPix;
             disp(sprintf('Elapsed time for block %d, trial %d is %G',b,t,timestamp.ts));
 %             
 %             stair{b}{procedure{b}{t}.stairNum} = PAL_AMPM_updatePM(stair{b}{procedure{b}{t}.stairNum},procedure{b}{t}.correct);
@@ -122,13 +125,12 @@ for b = 1:params.block.numBlocks
 
     end
     
-    correctPercent = 100*(correctProp/nTrials);
-    blockBreak(wPtr, b, correctPercent);
 
-    save(blockFileName, 'expData', 'results','sesNum', 'params', 'breakFix', 'stair');
+    save(blockFileName, 'procedure', 'results','sesNum', 'params', 'breakFix', 'stair');
     if params.eye.run, Eyelink('StopRecording'); Eyelink('Message', sprintf('Block # %d Complete', b));end
     
-    
+    correctPercent = 100*(correctProp/nTrials);
+    blockBreak(wPtr, b, correctPercent);
     
     Screen('Close');
 end

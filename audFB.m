@@ -1,8 +1,11 @@
 function audFB(correctTrial)
 global params;
 
-if correctTrial == 0
-    beep2(params.fbVars.low,params.fbVars.dur)  
-elseif  isnan(correctTrial) == 1
-    beep2(params.fbVars.high,params.fbVars.dur)
+switch correctTrial
+    case 0 %WRONG
+    beep3(params.feedback.low,params.feedback.dur,0)  
+    case 1 %CORRECT
+        %
+    case 2 %NO RESP
+    beep2(params.feedback.high,params.feedback.dur+.1)
 end

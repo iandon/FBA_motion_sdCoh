@@ -6,11 +6,11 @@ KbName('UnifyKeyNames');
 keyIsDown = 0;
 secs1 = GetSecs;
 t = 0; tic;
-while (~keyIsDown && t<params.responseVar.dur)
+while (~keyIsDown && t<params.response.dur)
     [keyIsDown,secs2,keyCode] = KbCheck;
     if keyIsDown ==1
         %check if key pressed was allowed one and if so end the trial
-        if sum(find(keyCode)== params.responseVar.allowedRespKeysCodes), 
+        if sum(find(keyCode)== params.response.allowedRespKeysCodes), 
             resp.key = find(keyCode);
             resp.rt = secs2-secs1;   
             resp.check = 1;
@@ -29,7 +29,7 @@ while (~keyIsDown && t<params.responseVar.dur)
     end
     t=toc;
 end
-if (t>params.responseVar.dur || t==params.responseVar.dur) && keyIsDown==0
+if (t>params.response.dur || t==params.response.dur) && keyIsDown==0
       %beep2(600,params.fbVars.dur)
 end
     
