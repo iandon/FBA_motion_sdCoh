@@ -1,4 +1,7 @@
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function params = motion_params_constStim()
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      screen params 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 screen = struct('num', {1}, 'rectPix',{[0 0  1280 960]}, 'dist', {57}, 'size', {[40 30]},...
@@ -20,7 +23,7 @@ screen.degratioY = ratioY;
 % Draw fixation cross, sizeCross is the cross size,
 % and sizeRect is the size of the rect surronding the cross
 fixation = struct( 'color',{[black black black 255]},'dur', {0.5}, 'penWidthPix', {2.5}, 'bkColor', screen.bkColor,...
-                      'sizeCrossDeg', {[1 1]}, 'colorDisc', {[black black black 255]},'present2ndFix',{1}); 
+                      'sizeCrossDeg', {[.5 .5]}, 'colorDisc', {[black black black 255]},'present2ndFix',{1}); 
 fixation.sizeCrossPix = degs2Pixels(screen.res, screen.size, screen.dist, fixation.sizeCrossDeg); % {15}
 fixation.rectPix = [0 0 fixation.sizeCrossDeg(1)*screen.degratioX fixation.sizeCrossDeg(2)*screen.degratioY];
 
@@ -203,10 +206,10 @@ params = struct('screen', screen, 'trial', trial, 'block', block, 'save', save,.
                 'fixation', fixation,'text',text, 'response', response, 'feedback', feedback,...
                 'stim', stim, 'ISI', ISI, 'dots', dots, 'eye', eye, 'oval', oval,...
                 'preCue',preCue,'neutralCue',neutralCue); %'stair',stair
-cl = 1;
-if cl
-    clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;
-    clear trial i block feedback ratio ratioX ratioY sp1 sp2 rc1 ISI sqslope hfslp neutralCue boundary stair;
-    clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
-end
+% cl = 1;
+% if cl
+%     clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;
+%     clear trial i block feedback ratio ratioX ratioY sp1 sp2 rc1 ISI sqslope hfslp neutralCue boundary stair;
+%     clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
+% end
     

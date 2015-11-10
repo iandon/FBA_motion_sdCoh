@@ -1,4 +1,4 @@
-function   [fixBreak, resp, allPosPix, timestamp] = trial(wPtr,trialAngle,baseAngle,blockNum,sesNum, trialNum ,cueType,SOA,dotCoh)
+function   [fixBreak, resp, timestamp, targetPix] = trial(wPtr,trialAngle,blockNum,sesNum, trialNum ,cueType,cueDir,SOA,dotCoh)
 global params;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11,6 +11,7 @@ cumulativeDur = struct('fixation', (params.fixation.dur),...
                        'stim', (params.fixation.dur + params.preCue.dur + SOA + params.stim.dur),... %'ISIpost', (params.fixation.dur + params.preCue.dur + SOA + params.stim.dur + params.respCue.RespCueISIdur),...
                        'total', (params.fixation.dur + params.preCue.dur + SOA + params.stim.dur));
 
+correctTrial=NaN;
 timestamp.ts=0;
 
 
@@ -18,8 +19,13 @@ timestamp.ts=0;
 %%%%% initialize dot positions for the two aperture
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[allPosPix.cue]= computeMotion_Cue(baseAngle,dotCoh,cueType);
-[allPosPix.target]= computeMotion_Target(trialAngle,dotCoh);
+[allPosPix_Cue dircs_Cue]= computeMotion_Target(cueDir,dotCoh);
+[allPosPix_Target dircs_Target]= computeMotion_Target(trialAngle,dotCoh);
+
+allPosPix.cue = allPosPix_Cue;
+allPosPix.target = allPosPix_Target;
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% start eye-tracker  %%%%%%%%%%%%%%%%%%%%%
@@ -94,6 +100,7 @@ trlStart = chk; preCueON = chk; preCueOFF = chk; stimON = chk; stimOFF = chk; po
 
 if params.eye.run, [fixBreak] = fixCheck; end
 
+
 while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
     ts = toc(trialStart);
     [keyIsDown, secs, keyCode] = KbCheck; pressQ = keyCode(KbName('Q'));
@@ -104,7 +111,7 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if trlStart < 2, trlStart = trlStart + 1; end
     elseif ts < cumulativeDur.preCue
         if preCueON == 1, Eyelink('Message', sprintf('PreCue ON')); end
-        moveDots(allPosPix.cue,wPtr,trialAngle,0);
+        moveDots(allPosPix_Cue,wPtr,trialAngle,0);
         timestamp.preCue = ts;
         if preCueON < 2, preCueON = preCueON + 1; end
     elseif ts < cumulativeDur.ISIpre
@@ -114,13 +121,13 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if preCueOFF < 2 , preCueOFF = preCueOFF + 1; end
     elseif ts < cumulativeDur.stim
         if stimON == 1, Eyelink('Message', sprintf('Stimulus ON')); end
-        moveDots(allPosPix.target, wPtr, trialAngle,1); %%%%% draw dots
+        moveDots(allPosPix_Target, wPtr, trialAngle,1); %%%%% draw dots
         fixation(wPtr); Screen('Flip', wPtr);
         timestamp.stim = ts;
         if stimON < 2, stimON = stimON + 1; end
     elseif ts < cumulativeDur.total %postCue -> last phase on which we care about fixation
         if postCueON == 1, Eyelink('Message', sprintf('PostCue ON')); end
-%        resp=drawRespCue(respType,wPtr);break;
+%         resp=drawRespCue(respType,wPtr);break;
         fixation(wPtr); Screen('Flip', wPtr);
         timestamp.postCue = ts;
         if stimOFF < 2, stimOFF = stimOFF + 1; end
@@ -148,6 +155,7 @@ if fixBreak
     end
     clear BrkTime
 else
+    
     if params.eye.run, Eyelink('Message', sprintf('Post Cue OFF')); end
     fixation(wPtr); Screen('Flip', wPtr); resp = response;
     correctTrial = checkResp(resp, trialAngle); 
@@ -161,8 +169,25 @@ end
 if params.eye.run
     Eyelink('Message', sprintf('Trial End'));
     Eyelink('Message', sprintf('EndTrial_SesNum_%d_Block_%d_Trial_%d_angle_%d_loc_%d_val_%d',...
-    sesNum,blockNum, trialNum,trialAngle,cueType,respType));
+        sesNum,blockNum, trialNum,trialAngle,cueType,respType));
 end
 
 clear trialStart cumulativeDur
  
+
+
+% %
+% if respType == 1
+%     allPosPix.x= LVFPosPix.x;
+%     allPosPix.y= LVFPosPix.y;
+%     dircs=LVFdircs;
+% else 
+%     allPosPix.x= RVFPosPix.x;
+%     allPosPix.y= RVFPosPix.y;
+%     dircs=RVFdircs;
+% end
+% 
+% allPosPix.x= cat(1,LVFPosPix.x,RVFPosPix.x);
+% allPosPix.y= cat(1,LVFPosPix.y,RVFPosPix.y);
+
+%dircs=cat(1,LVFdircs,RVFdircs);
