@@ -9,5 +9,3 @@ switch correctTrial
     case 2 %NO RESP
         beep2(params.feedback.low,params.feedback.dur+.2)
 end
-
-correctTrial

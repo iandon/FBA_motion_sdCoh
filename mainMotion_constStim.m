@@ -11,7 +11,7 @@ homedir = pwd;
 addpath(genpath(strcat(homedir,'/mgl')));
 
 
-params.eye.run = 0;
+% params.eye.run = 0;
 params.stair.run = 0;
 params.stim.colorTest = 0;
 
@@ -44,7 +44,6 @@ Screen('LoadNormalizedGammaTable',wPtr,new_gamma_table,[]);
 
 Priority(MaxPriority(wPtr)); 
 recal=0;
-instructions(wPtr,recal); % print instructions
 
 %%%%%%%%% If need make main screen black here 
 
@@ -63,23 +62,19 @@ instructions(wPtr,recal); % print instructions
 if params.eye.run
     Eyelink('Initialize'); %this establishes the connection to the eyelink
     el = prepEyelink(wPtr);
-    edfFile = sprintf('%s%s%s%s.edf', initials, sesNum,dateTime(5:6),dateTime(10:11)); edfFileStatus = Eyelink('OpenFile', edfFile); %this creates the .edf file (doesn't like many characters in name, i think 6 or 8 max)
+    edfFile = sprintf('%s%d.edf', initials, sesNum); edfFileStatus = Eyelink('OpenFile', edfFile); %this creates the .edf file (doesn't like many characters in name, i think 6 or 8 max)
     if edfFileStatus ~= 0, fprintf('Cannot open .edf file. Exiting ...'); return; end
-    cal = DoTrackerSetup(el); %This calibrates the eyelink . 
+    cal = EyelinkDoTrackerSetup(el); %This calibrates the eyelink . 
 end
 
-%%%%%%%%% Initialize fixation break structure %%%%%%%%%
-fixBreak=struct('fixBreak',{0},'recal',{0},'currRunNum',{0},'numFixBreaks',{0},'breakTrack',{0},'breakRecent',{0});
-
-
-%%%%%% Initialize block and trial parameters %%%%%%%
-
+%%%% INTRO SCREEN %%%%
+instructions(wPtr,recal); % print instructions
 
 %%%% --------------      Start experiment  --------------%%%%%
 correctTrial=zeros(params.trial.numTrialsPerBlock,params.block.numBlocks);
 trialNum = 0;
 if params.stair.run, stair = cell(params.block.numBlocks,params.stair.numStairs);end
-procedure = cell(params.block.numBlocks,1);
+procedure = cell(params.block.numBlocks,1); fixBreak = cell(params.block.numBlocks,1);
 for b = 1:params.block.numBlocks
 %     for stairNum = 1:params.stair.numStairs
 %         stair{b}{stairNum} = PAL_AMPM_setupPM('stimRange',params.stair.stimRange,...
@@ -88,45 +83,51 @@ for b = 1:params.block.numBlocks
 %                                            'gamma',params.stair.gamma,'lambda',params.stair.lambda,...
 %                                            'PF',@PAL_Weibull,'numTrials',params.stair.numTrials,'marginalize',params.stair.marginalize);
 %     end 
+    fixBreak{b}.num = 0;fixBreak{b}.recent = [];fixBreak{b}.track = [];fixBreak{b}.numRecal = 0;
     procedure{b} = calcTrialsVars_ConstStim;
     blockBreak(wPtr, b);
     if params.eye.run && (b > 1)
         EyelinkDoDriftCorrect(el, params.screen.centerPix(1),...
                               params.screen.centerPix(2), 1, 1);
     end
+    nTrials = params.trial.numTrialsPerBlock;
     t=0;
-    while t < params.trial.numTrialsPerBlock
-        t=t+1;
+    j = 0; nTrialsUPDATE = nTrials;
+    while j < nTrialsUPDATE
+        j = j + 1;
+        i = j - fixBreak{b}.num;
         recal = 0;
         
         
         
-        [fixBreak.fixBreak, respTrial, allPosPix, timestamp] = trial(wPtr, procedure{b}{t}.targetAngle,procedure{b}{t}.baseAngle, b, sesNum, t,...
-                                                          procedure{b}{t}.cueType,procedure{b}{t}.SOA,procedure{b}{t}.sdCoh,procedure{b}{t}.ansResp);
+        [fixBreak{b}.fixBreak, respTrial, allPosPix, timestamp] = trial(wPtr, procedure{b}{i}.targetAngle,procedure{b}{i}.baseAngle, b, sesNum, i,...
+                                                                        procedure{b}{i}.cueType,procedure{b}{i}.SOA,procedure{b}{i}.sdCoh,procedure{b}{i}.ansResp);
                                                       %trial(wPtr,trialAngle,baseAngle,blockNum,sesNum, trialNum ,cueType,SOA,dotCoh)
         % update trial parameters after response
-        procedure{b}{t}.timestamp=timestamp;
-        if fixBreak.fixBreak
-            disp((sprintf(' block %d, trial %d is a fixation break',b,t)));
-            [procedure{b}, fixBreak, recal] = breakProc(procedure{b},t,wPtr,el,fixBreak);
-            t=t-1;%%% reset trial counter by 1
+        procedure{b}{i}.timestamp=timestamp;
+        if fixBreak{b}.fixBreak
+            disp((sprintf(' block %d, trial %d is a fixation break',b,i)));
+            fixBreak{b}.num = fixBreak{b}.num+1;
+            [procedure{b}, fixBreak{b}, recal] = breakProc(procedure{b},nTrials,i,j,fixBreak{b});
         else
-            correctTrial(b,t) = respTrial.correct;
-            procedure{b}{t}.correct = respTrial.correct;
-            procedure{b}{t}.rt = respTrial.rt;
-            procedure{b}{t}.key = respTrial.key;
-            procedure{b}{t}.allPosPix = allPosPix;
-            disp(sprintf('Elapsed time for block %d, trial %d is %G',b,t,timestamp.ts));
+            correctTrial(b,i) = respTrial.correct;
+            procedure{b}{i}.correct = respTrial.correct;
+            procedure{b}{i}.rt = respTrial.rt;
+            procedure{b}{i}.key = respTrial.key;
+            procedure{b}{i}.allPosPix = allPosPix;
+            procedure{b}{i}.timestamp = timestamp;
+            disp(sprintf('Elapsed time for block %d, trial %d is %G',b,i,timestamp.ts));
 %             
-%             stair{b}{procedure{b}{t}.stairNum} = PAL_AMPM_updatePM(stair{b}{procedure{b}{t}.stairNum},procedure{b}{t}.correct);
+%             stair{b}{procedure{b}{i}.stairNum} = PAL_AMPM_updatePM(stair{b}{procedure{b}{i}.stairNum},procedure{b}{i}.correct);
            
         end
-        if recal; breakFix.Block.recalCount = breakFix.Block.recalCount + 1; recalProc(el, wPtr); end
+        if recal, recalProc(el, wPtr); end
 
     end
     
-
-    save(blockFileName, 'procedure', 'results','sesNum', 'params', 'breakFix', 'stair');
+    if params.stair.run, save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak', 'stair');
+    else save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak'); end
+    
     if params.eye.run, Eyelink('StopRecording'); Eyelink('Message', sprintf('Block # %d Complete', b));end
     
     correctPercent = 100*(correctProp/nTrials);
@@ -160,7 +161,7 @@ saveExpFile = sprintf('%s_results_%s_ses%d_%02d_%02d_%4d_time_%02d_%02d_%02i.mat
                       params.save.fileName, initials, sesNum,...
                       c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
           
-save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'stair', 'breakFix');
+save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'stair', 'fixBreak');
 
 cd(homedir);
 %%%%%--------------------------------------------------%%%%%

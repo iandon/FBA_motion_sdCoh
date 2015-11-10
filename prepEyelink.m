@@ -5,8 +5,8 @@ if params.eye.run
     [result dummy] = EyelinkInit(); 
     if result 
         el = EyelinkInitDefaults(wPtr);
-        el.backgroundcolour = params.screenVar.bkColor;
-        el.foregroundcolour = params.dots.color;
+        el.backgroundcolour = params.screen.bkColor;
+        el.foregroundcolour = params.stim.color;
         Eyelink('Command', 'file_sample_data = LEFT,RIGHT,GAZE,AREA');
     else  
         fprintf('Couldn''t initialize connection with eyetracker! Switch to dummy...\n'); 

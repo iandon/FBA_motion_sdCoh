@@ -1,7 +1,7 @@
 function instructions(wPtr,recal)
 global params;
 
-instruct = 'Indicate whether the motion direction was more UPWARD (1) or DOWNWARD (2)';
+instruct = 'Indicate whether the motion direction, relative to 45 degrees, was more VERTICAL (1) or HORIZTONAL (2)';
 
 % keys = 'Track the overall direction of the stimulus with your eyes as best as possible.';
 % start ='Do not track one individual dot - rather try to track the global motion';

@@ -159,9 +159,8 @@ end
 
 if params.eye.run
     Eyelink('Message', sprintf('Trial End'));
-    Eyelink('Message', sprintf('EndTrial_SesNum_%d_Block_%d_Trial_%d_angle_%d_loc_%d_val_%d',...
-    sesNum,blockNum, trialNum,trialAngle,cueType,respType));
+    Eyelink('Message', sprintf('EndTrial_SesNum_%d_Block_%d_Trial_%d_angle_%d_loc_%d_val',...
+    sesNum,blockNum, trialNum,trialAngle,cueType));
 end
 
-clear trialStart cumulativeDur
  
