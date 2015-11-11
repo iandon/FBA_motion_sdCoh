@@ -75,7 +75,7 @@ correctTrial=zeros(params.trial.numTrialsPerBlock,params.block.numBlocks);
 trialNum = 0;
 if params.stair.run, stair = cell(params.block.numBlocks,params.stair.numStairs);end
 procedure = cell(params.block.numBlocks,1); fixBreak = cell(params.block.numBlocks,1);
-for b = 1:params.block.numBlocks
+for b = 2:params.block.numBlocks
 %     for stairNum = 1:params.stair.numStairs
 %         stair{b}{stairNum} = PAL_AMPM_setupPM('stimRange',params.stair.stimRange,...
 %                                            'priorAlphaRange',params.stair.priorAlphaRange,...
@@ -85,7 +85,6 @@ for b = 1:params.block.numBlocks
 %     end 
     fixBreak{b}.num = 0;fixBreak{b}.recent = [];fixBreak{b}.track = [];fixBreak{b}.numRecal = 0;
     procedure{b} = calcTrialsVars_ConstStim;
-    blockBreak(wPtr, b);
     if params.eye.run && (b > 1)
         EyelinkDoDriftCorrect(el, params.screen.centerPix(1),...
                               params.screen.centerPix(2), 1, 1);
@@ -114,6 +113,7 @@ for b = 1:params.block.numBlocks
             procedure{b}{i}.correct = respTrial.correct;
             procedure{b}{i}.rt = respTrial.rt;
             procedure{b}{i}.key = respTrial.key;
+            procedure{b}{i}.resTrial = respTrial;
             procedure{b}{i}.allPosPix = allPosPix;
             procedure{b}{i}.timestamp = timestamp;
             disp(sprintf('Elapsed time for block %d, trial %d is %G',b,i,timestamp.ts));
@@ -129,43 +129,45 @@ for b = 1:params.block.numBlocks
     blockFileName = sprintf('%s_%s_BlockData_Ses%d_Block%d.mat',...
                             params.save.fileName, initials, sesNum, b);
     
-    if params.stair.run, save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak', 'stair');
-    else save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak'); end
+    if params.stair.run, save(blockFileName, 'procedure','sesNum', 'params', 'fixBreak', 'stair');
+    else save(blockFileName, 'procedure','sesNum', 'params', 'fixBreak'); end
     
     if params.eye.run, Eyelink('StopRecording'); Eyelink('Message', sprintf('Block # %d Complete', b));end
     
-    correctPercent = 100*(correctProp/nTrials);
-    blockBreak(wPtr, b, correctPercent);
+%     correctProp = sum(sum(correctTrial==1))/length(correctTrial(:));
+%     correctPercent = 100*(correctProp/nTrials);
+    blockBreak(wPtr, b);
     
     Screen('Close');
 end
 
-if params.eye.run; Eyelink('ReceiveFile', edfFile, direc,1); Eyelink('CloseFile'); Eyelink('Shutdown'); end
+
 
 Screen('Close'); Priority(0);
 Screen('CloseAll'); ShowCursor;
 %%%%%-------------     End the experiment    ----------%%%%%
 
-%%%%%------------- Save all experiment data ----------%%%%%
-cd(direc);
-date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i', c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
-save(saveExpFile);
-cd(homedir);
+% %%%%%------------- Save all experiment data ----------%%%%%
+% cd(dirc);
+% date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i', c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
+% save(saveExpFile);
+% cd(homedir);
 
 % %%%%%%% run some analysis %%%%%%%
 % totalTrials=(params.trial.numTrialsPerBlock*numBlocks);
 c = clock;
 homedir = pwd; 
-dirc = sprintf('results/%s/%s',initials);
+dirc = sprintf('results/%s',initials);
+if params.eye.run; Eyelink('ReceiveFile', edfFile, dirc,1); Eyelink('CloseFile'); Eyelink('Shutdown'); end
 mkdir(dirc); cd(dirc)
-if params.eye.run; Eyelink('ReceiveFile', ELfileName, dirc,1); Eyelink('CloseFile'); Eyelink('Shutdown'); end
+
 Screen('Close');
 date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i ', c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
 saveExpFile = sprintf('%s_results_%s_ses%d_%02d_%02d_%4d_time_%02d_%02d_%02i.mat',...
                       params.save.fileName, initials, sesNum,...
                       c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
-if params.stair.run, save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'fixBreak', 'stair');
-else save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'fixBreak'); end
+if params.stair.run, save(saveExpFile ,'procedure', 'respTrial','sesNum', 'params', 'date', 'fixBreak', 'stair');
+else save(saveExpFile ,'procedure', 'respTrial','sesNum', 'params', 'date', 'fixBreak'); end
 
 cd(homedir);
 %%%%%--------------------------------------------------%%%%%
