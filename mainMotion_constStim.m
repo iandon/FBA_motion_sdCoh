@@ -115,9 +115,7 @@ for b = 2:params.block.numBlocks
             procedure{b}{i}.key = respTrial.key;
             procedure{b}{i}.resTrial = respTrial;
             procedure{b}{i}.allPosPix = allPosPix;
-            procedure{b}{i}.timestamp = timestamp;
-            disp(sprintf('Elapsed time for block %d, trial %d is %G',b,i,timestamp.ts));
-%             
+            procedure{b}{i}.timestamp = timestamp;        
 %             stair{b}{procedure{b}{i}.stairNum} = PAL_AMPM_updatePM(stair{b}{procedure{b}{i}.stairNum},procedure{b}{i}.correct);
            
         end
