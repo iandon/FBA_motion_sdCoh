@@ -151,7 +151,7 @@ trial.numTrialsTotal = trial.numTrialsPerBlock * block.numBlocks;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Save Data params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'TEST'});
+save = struct('fileName', {'ID_FBA_motion'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'TEST'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Text params

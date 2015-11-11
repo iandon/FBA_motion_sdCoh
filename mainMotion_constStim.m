@@ -125,6 +125,10 @@ for b = 1:params.block.numBlocks
 
     end
     
+    
+    blockFileName = sprintf('%s_%s_BlockData_Ses%d_Block%d.mat',...
+                            params.save.fileName, initials, sesNum, b);
+    
     if params.stair.run, save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak', 'stair');
     else save(blockFileName, 'procedure', 'results','sesNum', 'params', 'fixBreak'); end
     
@@ -144,7 +148,7 @@ Screen('CloseAll'); ShowCursor;
 
 %%%%%------------- Save all experiment data ----------%%%%%
 cd(direc);
-date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i ', c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
+date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i', c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
 save(saveExpFile);
 cd(homedir);
 
@@ -152,7 +156,7 @@ cd(homedir);
 % totalTrials=(params.trial.numTrialsPerBlock*numBlocks);
 c = clock;
 homedir = pwd; 
-dirc = sprintf('results/%s/%s', params.save.expTypeDirName,initials);
+dirc = sprintf('results/%s/%s',initials);
 mkdir(dirc); cd(dirc)
 if params.eye.run; Eyelink('ReceiveFile', ELfileName, dirc,1); Eyelink('CloseFile'); Eyelink('Shutdown'); end
 Screen('Close');
@@ -160,8 +164,8 @@ date = sprintf('Date:%02d/%02d/%4d  Time:%02d:%02d:%02i ', c(2),c(3),c(1),c(4),c
 saveExpFile = sprintf('%s_results_%s_ses%d_%02d_%02d_%4d_time_%02d_%02d_%02i.mat',...
                       params.save.fileName, initials, sesNum,...
                       c(2),c(3),c(1),c(4),c(5),ceil(c(6)));
-          
-save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'stair', 'fixBreak');
+if params.stair.run, save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'fixBreak', 'stair');
+else save(saveExpFile ,'procedure', 'results','sesNum', 'params', 'date', 'fixBreak'); end
 
 cd(homedir);
 %%%%%--------------------------------------------------%%%%%

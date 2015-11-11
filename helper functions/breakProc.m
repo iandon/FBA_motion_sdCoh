@@ -52,8 +52,8 @@ trialProcNEW1{nTrials} = trialProc{currTrialNum};
 trialProcNEW = trialProcNEW1;
 
 fixBreakNEW.track = cell(fixBreak.num,1);
-if numFixBreaks > 1; for h = 1:(numFixBreaks-1); fixBreakNEW.track{h} = fixBreak.track{h}; end; end
-fixBreakNEW.track{numFixBreaks} = currRunNum;
+if fixBreak.num > 1; for h = 1:(fixBreak.num-1); fixBreakNEW.track{h} = fixBreak.track{h}; end; end
+fixBreakNEW.track{fixBreak.num} = currRunNum;
 
 
 
@@ -180,7 +180,7 @@ else         %If there haven't been any breaks w/in the last 3 trials, but it is
     fixBreakNEW.recent = 0;    % Reset -> none recently
 end
 fixBreakNEW.numRecal = fixBreak.numRecal+recal;
-
+fixBreakNEW.num = fixBreak.num;
 end
 
 
