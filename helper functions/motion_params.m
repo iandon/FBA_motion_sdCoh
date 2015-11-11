@@ -1,7 +1,4 @@
-function params = motion_params_constStim()
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      screen params 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 screen = struct('num', {1}, 'rectPix',{[0 0  1280 960]}, 'dist', {57}, 'size', {[40 30]},...
@@ -23,7 +20,7 @@ screen.degratioY = ratioY;
 % Draw fixation cross, sizeCross is the cross size,
 % and sizeRect is the size of the rect surronding the cross
 fixation = struct( 'color',{[black black black 255]},'dur', {0.5}, 'penWidthPix', {2.5}, 'bkColor', screen.bkColor,...
-                      'sizeCrossDeg', {[.5 .5]}, 'colorDisc', {[black black black 255]},'present2ndFix',{1}); 
+                      'sizeCrossDeg', {[0.2 0.2]}, 'colorDisc', {[black black black 255]},'present2ndFix',{1}); 
 fixation.sizeCrossPix = degs2Pixels(screen.res, screen.size, screen.dist, fixation.sizeCrossDeg); % {15}
 fixation.rectPix = [0 0 fixation.sizeCrossDeg(1)*screen.degratioX fixation.sizeCrossDeg(2)*screen.degratioY];
 
@@ -32,14 +29,13 @@ fixation.rectPix = [0 0 fixation.sizeCrossDeg(1)*screen.degratioX fixation.sizeC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 stim = struct('dur', {.2}, 'possibleAngels', {[-1 1]},'boundaryAngle', {[0 0]},...
               'radiusDeg',{3}, 'bkColor', {gray}, 'speedDegPerSec', {15},'lifetime', {1},...
-              'limitLifetime', {0.05},'apertureCenter',[-5,0,-5,0],'baseAngles', [-45,-225],...
-              'angleDiff',8,'color',{black});
+              'limitLifetime', {0.05},'apertureCenter',[-5,0,-5,0]);
 % [3 357 183 177]
 %cw/ccw: Note, response is encoded in response.cw_ccw = [1 2]. Any changes must be done there as well
 stim.cw_ccw = [1, 2]; %CW (1) or CCW (2) from the boundary, for example 3deg is CCW from 0deg
 
 
-% stim.boundaryAngleRad = stim.boundaryAngle*pi/180;
+stim.boundaryAngleRad = stim.boundaryAngle*pi/180;
 % speed = visual degreee per per second; num =# of dots; coh=propotion moving in designated direction; 
 % diam = diameter of circle of dots in visual degrees; lifetime = logical, are dots limited life time or not
 % limitLifetime = proportion of dots which will be randomly replaced in  each frame
@@ -48,38 +44,36 @@ stim.radiusPix = deg2pix1Dim(stim.radiusDeg, ratioX);
 stim.durInFrames = round(stim.dur*screen.monRefresh);
 stim.apertureCenterPix = [stim.apertureCenter(1)*screen.degratioX, stim.apertureCenter(3)*screen.degratioY];
 
-
-stim.sdVals = [.00001, .02, 4, 8, 16, 32, 48, 64];
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Stair params 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% stimValsRangeREAL = [.1,25];
-% stimValsRangeSTAIR = [stimValsRangeREAL(1)/stimValsRangeREAL(2),1];
-% numStimVals = 200;
-% numAlphaRange = 100;
-% 
-% 
-% priorAlphaRange = linspace(stimValsRangeSTAIR(1),stimValsRangeSTAIR(2),numAlphaRange);
-% priorBetaRange = 0:10;
-% priorLambdaRange = 0:.01:.1;
-% gamma = .5;
-% 
-% 
-% stair = struct('stimRange',stimValsRangeSTAIR,'stimRangeDisplay',stimValsRangeREAL,...
-%                    'priorAlphaRange',priorAlphaRange,...
-%                    'priorBetaRange',priorBetaRange,...
-%                    'gamma',gamma,'lambda',priorLambdaRange,...
-%                    'PF',@PAL_Weibull,'marginalize',[4,2],...
-%                    'AvoidConsecutive',1,'WaitTime',4,'numTrials',60,'numStairs',3);
+stimValsRangeREAL = [.1,25];
+stimValsRangeSTAIR = [stimValsRangeREAL(1)/stimValsRangeREAL(2),1];
+numStimVals = 200;
+numAlphaRange = 100;
+
+
+priorAlphaRange = linspace(stimValsRangeSTAIR(1),stimValsRangeSTAIR(2),numAlphaRange);
+priorBetaRange = 0:10;
+priorLambdaRange = 0:.01:.1;
+gamma = .5;
+
+
+stair = struct('stimRange',stimValsRangeSTAIR,'stimRangeDisplay',stimValsRangeREAL,...
+                   'priorAlphaRange',priorAlphaRange,...
+                   'priorBetaRange',priorBetaRange,...
+                   'gamma',gamma,'lambda',priorLambdaRange,...
+                   'PF',@PAL_Weibull,'marginalize',[4,2],...
+                   'AvoidConsecutive',1,'WaitTime',4,'numTrials',60,'numStairs',3);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Dot params 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dots = struct('sizeInPix', {4}, 'numPerDeg',1.65);
-dots.num = round(dots.numPerDeg*(pi*(stim.radiusDeg)^2)); % 1 dot per deg/deg
+dots = struct( 'color',{black},'sizeInPix', {4});
+numdotsperdeg = 3; %1.65
+dots.num = round(numdotsperdeg*(pi*(stim.radiusDeg)^2)); % 1 dot per deg/deg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Oval within dots params 
@@ -109,7 +103,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      PreCue params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-preCue = struct('dur', .1,'vertDistDeg',1,'color',{white});
+preCue = struct('dur', .1,'vertDistDeg',1,'color',[1 1 1]);
 
 preCue.horizDistDeg = (stim.speedDegPerSec/2)*preCue.dur;
 
@@ -137,21 +131,21 @@ neutralCue.rectPix = [0 0 sp1 sp2];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Block params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-block = struct('numBlocks', 5);
+block = struct('numBlocks', 3);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Trial params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-trial = struct('numTrialsPerBlock', {192}); %total number of trials in a blocks
+trial = struct('numTrialsPerBlock', {180}); %total number of trials in a blocks
 % if mod(trial.numTrialsPerBlock,length(stim.possibleAngels))~=0
 %     error('number of trials must be a multiplication of the possible angles');
 % end
-trial.numTrialsTotal = trial.numTrialsPerBlock * block.numBlocks;
+trial.numTrialstotal = trial.numTrialsPerBlock * block.numBlocks;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Save Data params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'TEST'});
+save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Text params
@@ -182,13 +176,13 @@ ISI = struct('postDur', {0.05},'preDur',{.250}); %'preOrder',2,)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Feedback params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-feedback = struct('dur', {0.1}, 'high', {500}, 'low', {200}); 
+fbVars = struct('dur', {0.1}, 'high', {1250}, 'low', {200}); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     eye params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-eye = struct('run',{1}, 'fixCheck',{0}, 'fixRequiredSecs', {0.2}, 'fixCheckRadiusDeg', {2},...
-             'fixLongGoCalbirate', {2},'breakWaitDur',{2}); 
+eye = struct('run',{0}, 'fixCheck',{0}, 'fixRequiredSecs', {0.2}, 'fixCheckRadiusDeg', {2},...
+                'fixLongGoCalbirate', {2}); 
 % record (1) or not to record (0)
 %If recording set that there will be a second fixation because transfering
 %the files takes time and we want to present a fixation when that happens
@@ -203,13 +197,13 @@ eye.fixCheckRadiusPix = ratioX*eye.fixCheckRadiusDeg;
 
 global params;
 params = struct('screen', screen, 'trial', trial, 'block', block, 'save', save,...
-                'fixation', fixation,'text',text, 'response', response, 'feedback', feedback,...
+                'fixation', fixation,'text',text, 'response', response, 'fbVars', fbVars,...
                 'stim', stim, 'ISI', ISI, 'dots', dots, 'eye', eye, 'oval', oval,...
-                'preCue',preCue,'neutralCue',neutralCue); %'stair',stair
-% cl = 1;
-% if cl
-%     clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;
-%     clear trial i block feedback ratio ratioX ratioY sp1 sp2 rc1 ISI sqslope hfslp neutralCue boundary stair;
-%     clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
-% end
-%     
+                'stair',stair,'preCue',preCue,'neutralCue',neutralCue); 
+cl = 1;
+if cl
+    clear white gray black locationL locationR screen stim fixation precueExg box postCueVar response ;
+    clear trial i block fbVars ratio ratioX ratioY sp1 sp2 rc1 ISIVar sqslope hfslp neutralCue boundary stair;
+    clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
+end
+    

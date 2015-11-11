@@ -1,5 +1,4 @@
-function params = motion_params_constStim()
-
+function params = motion_params_constStim_YZ()
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      screen params 
@@ -151,7 +150,7 @@ trial.numTrialsTotal = trial.numTrialsPerBlock * block.numBlocks;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Save Data params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'TEST'});
+save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'YZ'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Text params
@@ -208,8 +207,8 @@ params = struct('screen', screen, 'trial', trial, 'block', block, 'save', save,.
                 'preCue',preCue,'neutralCue',neutralCue); %'stair',stair
 % cl = 1;
 % if cl
-%     clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;
-%     clear trial i block feedback ratio ratioX ratioY sp1 sp2 rc1 ISI sqslope hfslp neutralCue boundary stair;
-%     clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
+% clear white gray black locationL locationR screen stim fixation precueExg box postCue response ;
+% clear trial i block feedback ratio ratioX ratioY sp1 sp2 rc1 ISI sqslope hfslp neutralCue boundary stair;
+% clear save text preCue screenInfo mouse dotInfo eye xres yres test xoval yoval oval dots cl outerRadiusDeg preCue;
 % end
-%     
+    
