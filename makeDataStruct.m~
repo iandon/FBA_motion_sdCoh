@@ -11,8 +11,8 @@ numLevels = length(sdCogVect);
 dataStruct.sdCohVect = sdCohVect;
 dataStruct.ses.propCorr.allTrials = nan(numTrials*numBlocks,numLevels);
 dataStruct.ses.numCorr = nan(1,numLevels);
-dataStruct.ses.numCorrExclude = nan(1,numLevels);
 dataStruct.ses.numTrialsLevel = zeros(1,numLevels);
+dataStruct.ses.numTrialsExcludeMiss = zeros(1,numLevels);
 
 dataStruct.block = cell(numBlocks,1);
 
@@ -21,6 +21,7 @@ for b = 1:numBlocks
     dataStruct.block{b}.propCorr.allTrials = nan(numTrials,numLevels);
     dataStruct.block{b}.numCorr = nan(1,numLevels);
     dataStruct.block{b}.numTrialsLevel = zeros(1,numLevels);
+    dataStruct.block{b}.numTrialsExcludeMiss = zeros(1,numLevels);
     for t = 1:numTrials
         currColumn = find(sdCohVect == procedure{b}{t}.sdCoh);
         
@@ -28,16 +29,26 @@ for b = 1:numBlocks
         dataStruct.ses.numTrialsLevel(currColumn) = dataStruct.ses.numTrialsLevel(currVectColumn)+1;
         dataStruct.block{b}.numTrialsLevel(currColumn) = dataStruct.ses.numTrialsLevel(currVectColumn)+1;
         
+        %count, but exclude misses
+        dataStruct.ses.numTrialsExcludeMiss(currColumn) = dataStruct.ses.numTrialsExcludeMiss(currColumn) + (procedure{b}{t}.correct ~= 2);
+        dataStruct.block{b}.numTrialsExcludeMiss(currColumn) = dataStruct.block{b}.numTrialsExcludeMiss(currColumn) + (procedure{b}{t}.correct ~= 2);
+        
         %row determined by number of trial per level SO FAR
         currRowSes = dataStruct.ses.numTrialsLevel(currColumn);
         currRowBlock = dataStruct.block{b}.numTrialsLevel(currColumn);
         
         %record correctness (correct, incorrect, or no response)
-        dataStruct.ses.propCorr.allTrials(currRowSes,currColumn) = procedure{b}{t}.correct;
-        dataStruct.block{b}.propCorr.allTrials(currRowBlock,currColumn) = procedure{b}{t}.correct;
+        dataStruct.ses.accAllTrials(currRowSes,currColumn) = procedure{b}{t}.correct;
+        dataStruct.block{b}.acc.allTrials(currRowBlock,currColumn) = procedure{b}{t}.correct;
         
+        
+        %count the number correct
         dataStruct.ses.numCorr(currColumn) = dataStruct.ses.numCorr(currColumn) + (1==procedure{b}{t}.correct);
         dataStruct.block{b}.numCorr(currColumn)  = dataStruct.block{b}.numCorr(currColumn)  + (1==procedure{b}{t}.correct);
         
     end
+    dataStruct.ses.propCorr = dataStruct.ses.numCorr./;
+    
+    
+    
 end
