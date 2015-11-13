@@ -75,7 +75,7 @@ correctTrial=zeros(params.trial.numTrialsPerBlock,params.block.numBlocks);
 trialNum = 0;
 if params.stair.run, stair = cell(params.block.numBlocks,params.stair.numStairs);end
 procedure = cell(params.block.numBlocks,1); fixBreak = cell(params.block.numBlocks,1);
-for b = 2:params.block.numBlocks
+for b = 1:params.block.numBlocks
 %     for stairNum = 1:params.stair.numStairs
 %         stair{b}{stairNum} = PAL_AMPM_setupPM('stimRange',params.stair.stimRange,...
 %                                            'priorAlphaRange',params.stair.priorAlphaRange,...
