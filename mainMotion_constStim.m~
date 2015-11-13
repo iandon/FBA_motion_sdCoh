@@ -107,6 +107,7 @@ for b = 2:params.block.numBlocks
         if fixBreak{b}.fixBreak
             disp((sprintf(' block %d, trial %d is a fixation break',b,i)));
             fixBreak{b}.num = fixBreak{b}.num+1;
+            nTrialsUPDATE = nTrialsUPDATE+1;
             [procedure{b}, fixBreak{b}, recal] = breakProc(procedure{b},nTrials,i,j,fixBreak{b});
         else
             correctTrial(b,i) = respTrial.correct;

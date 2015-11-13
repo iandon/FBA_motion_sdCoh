@@ -49,7 +49,10 @@ stim.durInFrames = round(stim.dur*screen.monRefresh);
 stim.apertureCenterPix = [stim.apertureCenter(1)*screen.degratioX, stim.apertureCenter(3)*screen.degratioY];
 
 
-stim.sdVals = [.00001, .02, 4, 8, 16, 32, 48, 64];
+% stim.sdVals = [.00001, 2, 4, 8, 16, 32, 48, 64];
+
+stim.sdVals = [.00001, 2, logspace(log10(8),log10(180),6)];
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Stair params 
