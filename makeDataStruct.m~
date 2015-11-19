@@ -1,11 +1,11 @@
-function [dataStruct] = makeDataStruct(procedure,params,fixBreak)
+function [dataStruct] = makeDataStruct(procedure,params)
 
 addpath(genpath('/users/purplab/Desktop/Ian/ID_FBA_motion/sdCoh/palamedes1_5_0'))
 
 numBlocks = params.block.numBlocks;
 numTrials = params.trial.numTrialsPerBlock;
 
-sdCohVect = params.stim.sdVals(length(params.stim.sdVals):-1:1);
+sdCohVect = params.stim.sdVals;
 
 numLevels = length(sdCohVect);
 
@@ -26,8 +26,8 @@ for b = 1:numBlocks
     dataStruct.block{b}.numCorr = zeros(1,numLevels);
     dataStruct.block{b}.numTrialsLevel = zeros(1,numLevels);
     dataStruct.block{b}.numTrialsExcludeMiss = zeros(1,numLevels);
-    numTrialsUPDATE = numTrials-fixBreak{b}.num;
-    for t = 1:numTrialsUPDATE
+
+    for t = 1:numTrials
         currColumn = find(sdCohVect == procedure{b}{t}.sdCoh);
         
         %count number of trials per level
@@ -70,17 +70,18 @@ dataStruct.ses.propCorrExcludeMiss = dataStruct.ses.numCorr./dataStruct.ses.numT
 %% fit curves
 
 
-StimLevels = sdCohVect./100;
+StimLevels = sdCohVect;
 
-paramGuess = [4,2,.15];
-xCurve = linspace(.01,1,1000);
+paramGuess = [30,20,.15];
+xCurve = linspace(10^-6,180,10000);
+xCurveLog = log10(xCurve);
 
-
+axisVect = [min(xCurveLog),max(xCurveLog),.4,1];
 
 PF = @PAL_Weibull;
 
-alphaguess = [-1:.01:0];
-betaguess = [-30:2:0];
+alphaguess = [0:1:180];
+betaguess = [-300:20:300];
 gammaguess = 0.5;
 lambdaguess = [0:.05:.5];
 
@@ -128,9 +129,17 @@ end
 
 
 figure(1), clf, hold on
-plot(StimLevels,dataStruct.ses.propCorr,'bo')
-plot(xCurve,PF(dataStruct.ses.propCorrFit.params,xCurve),'b-')
-axis([0,1,.5,1])
+plot(log10(StimLevels),dataStruct.ses.propCorr,'bo')
+plot(xCurveLog,PF(dataStruct.ses.propCorrFit.params,xCurve),'b-')
+axis(axisVect)
 hold off
+
+figure(2), clf, hold on
+plot(log10(StimLevels),dataStruct.ses.propCorrExcludeMiss,'bo')
+plot(xCurveLog,PF(dataStruct.ses.propCorrFitExcludeMiss.params,xCurve),'b-')
+axis(axisVect)
+hold off
+
+
 
 

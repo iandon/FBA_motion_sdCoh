@@ -1,11 +1,11 @@
-function [dataStruct] = makeDataStruct(procedure,params,fixBreak)
+function [dataStruct] = makeDataStruct(procedure,params)
 
 addpath(genpath('/users/purplab/Desktop/Ian/ID_FBA_motion/sdCoh/palamedes1_5_0'))
 
 numBlocks = params.block.numBlocks;
 numTrials = params.trial.numTrialsPerBlock;
 
-sdCohVect = params.stim.sdVals(length(params.stim.sdVals):-1:1);
+sdCohVect = params.stim.sdVals;
 
 numLevels = length(sdCohVect);
 
@@ -26,8 +26,8 @@ for b = 1:numBlocks
     dataStruct.block{b}.numCorr = zeros(1,numLevels);
     dataStruct.block{b}.numTrialsLevel = zeros(1,numLevels);
     dataStruct.block{b}.numTrialsExcludeMiss = zeros(1,numLevels);
-    numTrialsUPDATE = numTrials-fixBreak{b}.num;
-    for t = 1:numTrialsUPDATE
+
+    for t = 1:numTrials
         currColumn = find(sdCohVect == procedure{b}{t}.sdCoh);
         
         %count number of trials per level
@@ -72,15 +72,17 @@ dataStruct.ses.propCorrExcludeMiss = dataStruct.ses.numCorr./dataStruct.ses.numT
 
 StimLevels = sdCohVect;
 
-paramGuess = [4,2,.15];
-xCurve = linspace(.01,100,1000);
+paramGuess = [30,20,.15];
+xCurve = linspace(10^-6,180,10000);
+xCurveLog = log10(xCurve);
 
-axisVect = [0,max(xCurve),.5,1];
+axisVect = [min(xCurveLog),max(xCurveLog),.4,1];
+axisVect2 = [min(xCurve),max(xCurve),.4,1];
 
 PF = @PAL_Weibull;
 
-alphaguess = [0:1:100];
-betaguess = [-300:20:300];
+alphaguess = [0:1:180];
+betaguess = [-100:1:100];
 gammaguess = 0.5;
 lambdaguess = [0:.05:.5];
 
@@ -128,15 +130,30 @@ end
 
 
 figure(1), clf, hold on
-plot(StimLevels,dataStruct.ses.propCorr,'bo')
-plot(xCurve,PF(dataStruct.ses.propCorrFit.params,xCurve),'b-')
+plot(log10(StimLevels),dataStruct.ses.propCorr,'bo')
+plot(xCurveLog,PF(dataStruct.ses.propCorrFit.params,xCurve),'b-')
 axis(axisVect)
 hold off
 
 figure(2), clf, hold on
+plot(log10(StimLevels),dataStruct.ses.propCorrExcludeMiss,'bo')
+plot(xCurveLog,PF(dataStruct.ses.propCorrFitExcludeMiss.params,xCurve),'b-')
+axis(axisVect)
+hold off
+
+
+
+%%
+figure(3), clf, hold on
+plot(StimLevels,dataStruct.ses.propCorr,'bo')
+plot(xCurve,PF(dataStruct.ses.propCorrFit.params,xCurve),'b-')
+axis(axisVect2)
+hold off
+
+figure(4), clf, hold on
 plot(StimLevels,dataStruct.ses.propCorrExcludeMiss,'bo')
 plot(xCurve,PF(dataStruct.ses.propCorrFitExcludeMiss.params,xCurve),'b-')
-axis(axisVect)
+axis(axisVect2)
 hold off
 
 

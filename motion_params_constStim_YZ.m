@@ -50,7 +50,7 @@ stim.apertureCenterPix = [stim.apertureCenter(1)*screen.degratioX, stim.aperture
 
 % stim.sdVals = [.00001, 2, 4, 8, 16, 32, 48, 64];
 
-stim.sdVals = [.00001, 2, logspace(log10(8),log10(180),6)];
+stim.sdVals = [.0001, 2, logspace(log10(8),log10(180),6)];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Stair params 

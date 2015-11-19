@@ -12,7 +12,7 @@ numRepeats = 6; %how many times does each trial type repeat?
 
 baseAnglePossible = params.stim.baseAngles;
 angleDirPossible  = [1, -1]; % ccw vs cw
-cueTypePossible  = 1; %just Neutral
+cueTypePossible  = 0; %just Neutral
 sdPossible = params.stim.sdVals;
 
 
