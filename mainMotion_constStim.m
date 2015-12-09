@@ -4,7 +4,7 @@ addpath(genpath('/users/Shared/Psychtoolbox'))
 
 
 global params;
-params = motion_params_constStim_YZ; %SET for each participant
+params = motion_params_constStim_LD; %SET for each participant
 
 
 homedir = pwd;  

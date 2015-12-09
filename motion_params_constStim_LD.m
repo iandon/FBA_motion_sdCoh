@@ -32,7 +32,7 @@ fixation.rectPix = [0 0 fixation.sizeCrossDeg(1)*screen.degratioX fixation.sizeC
 stim = struct('dur', {.2}, 'possibleAngels', {[-1 1]},'boundaryAngle', {[0 0]},...
               'radiusDeg',{3}, 'bkColor', {gray}, 'speedDegPerSec', {15},'lifetime', {1},...
               'limitLifetime', {0.05},'apertureCenter',[-5,0,-5,0],'baseAngles', [-45,-225],...
-              'angleDiff',5,'color',{black});
+              'angleDiff',8,'color',{black});
 % [3 357 183 177]
 %cw/ccw: Note, response is encoded in response.cw_ccw = [1 2]. Any changes must be done there as well
 stim.cw_ccw = [1, 2]; %CW (1) or CCW (2) from the boundary, for example 3deg is CCW from 0deg
@@ -138,7 +138,7 @@ neutralCue.rectPix = [0 0 sp1 sp2];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Block params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-block = struct('numBlocks', 10);
+block = struct('numBlocks',6);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Trial params
@@ -152,7 +152,7 @@ trial.numTrialsTotal = trial.numTrialsPerBlock * block.numBlocks;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Save Data params
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'YZ'});
+save = struct('fileName', {'motionExp'}, 'expTypeDirName', {'EstiDisc'}, 'SubjectInitials',{'LD'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Text params
