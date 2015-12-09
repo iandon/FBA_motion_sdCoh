@@ -103,7 +103,7 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if trlStart < 2, trlStart = trlStart + 1; end
     elseif ts < cumulativeDur.preCue
         if preCueON == 1, Eyelink('Message', sprintf('PreCue ON')); end
-        moveDots(allPosPix.cue,wPtr,0);
+        moveDots(allPosPix.cue,wPtr,0,cumulativeDur.preCue-cumulativeDur.fixation);
         timestamp.preCue = ts;
         if preCueON < 2, preCueON = preCueON + 1; end
     elseif ts < cumulativeDur.ISIpre
@@ -113,7 +113,7 @@ while ~fixBreak && (ts < cumulativeDur.total) && ~pressQ
         if preCueOFF < 2 , preCueOFF = preCueOFF + 1; end
     elseif ts < cumulativeDur.stim
         if stimON == 1, Eyelink('Message', sprintf('Stimulus ON')); end
-        moveDots(allPosPix.target, wPtr,1); %%%%% draw dots
+        moveDots(allPosPix.target, wPtr,1,cumulativeDur.stim-cumulativeDur.ISIpre); %%%%% draw dots
         fixation(wPtr); Screen('Flip', wPtr);
         timestamp.stim = ts;
         if stimON < 2, stimON = stimON + 1; end

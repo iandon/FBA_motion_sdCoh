@@ -4,7 +4,7 @@ addpath(genpath('/users/Shared/Psychtoolbox'))
 
 
 global params;
-params = motion_params_constStim_LD; %SET for each participant
+params = motion_params_constStim_ID; %SET for each participant
 
 
 homedir = pwd;  
@@ -119,7 +119,7 @@ for b = 1:params.block.numBlocks
 %             stair{b}{procedure{b}{i}.stairNum} = PAL_AMPM_updatePM(stair{b}{procedure{b}{i}.stairNum},procedure{b}{i}.correct);
            
         end
-        if recal, recalProc(el, wPtr); end
+        if recal, recalProc(el); end
 
     end
     
@@ -134,7 +134,7 @@ for b = 1:params.block.numBlocks
     
 %     correctProp = sum(sum(correctTrial==1))/length(correctTrial(:));
 %     correctPercent = 100*(correctProp/nTrials);
-    blockBreak(wPtr, b);
+    if b < params.block.numBlocks, blockBreak(wPtr, b); end
     
     Screen('Close');
 end

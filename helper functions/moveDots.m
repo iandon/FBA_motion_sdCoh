@@ -1,4 +1,4 @@
-function moveDots(allPosPix,wPtr,stimOrPreCue)
+function moveDots(allPosPix,wPtr,stimOrPreCue,totalDur)
 global params; 
 Screen('BlendFunction', wPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -14,7 +14,8 @@ end
 currentFrame = 1;
 stimDuration = tic;
 
-while currentFrame <= durInFrames;
+while currentFrame <= durInFrames && toc(stimDuration) <= totalDur
+    currentFrame = ceil(toc(stimDuration)*(params.screen.monRefresh/2));
     allDots = [allPosPix.x(:,currentFrame), allPosPix.y(:,currentFrame)]';
     allDots = allDots-repmat(params.screen.centerPix', 1, size(allDots,2));
     c = params.screen.centerPix;
@@ -28,8 +29,6 @@ while currentFrame <= durInFrames;
     Screen('DrawingFinished',wPtr,0);
     Screen('Flip', wPtr,0,0);
     clear allDots
-    
-    currentFrame = ceil(toc(stimDuration)*(params.screen.monRefresh/2));
 end 
 
 if params.oval.fixation, fixation(wPtr); end; 
