@@ -5,14 +5,14 @@ numTrials = params.trial.numTrialsPerBlock; % should be 180
 
 
 
-numRepeats = 6; %how many times does each trial type repeat?
-                   % 8 SDs, 2 baseAngles, 2 angleDirs, 1 cueType = 32
-                   %6 repeats = 192 trials per block
+numRepeats = 1; %how many times does each trial type repeat?
+                   % 10 SDs, 2 baseAngles, 2 angleDirs, 3 cueType = 32
+                   % 2 repeats = 192 trials per block
 
 
 baseAnglePossible = params.stim.baseAngles;
 angleDirPossible  = [1, -1]; % ccw vs cw
-cueTypePossible  = 0; %just Neutral
+cueTypePossible  = [0,1,2]; %
 sdPossible = params.stim.sdVals;
 
 
