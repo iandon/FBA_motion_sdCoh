@@ -164,17 +164,12 @@ end
 
 %% ALL
 
-legendVect = {cueTypeCell{1},cueTypeCell{2},cueTypeCell{3}};
-
 
 currFig = currFig+1;
 figure(currFig), clf, hold on
 for cueTypeCurr = 1:length(cueTypeCell)
-plot(xCurveLog,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFit.params,xCurve),'Color',colorVect(cueTypeCurr,:))
-end
-legend(legendVect{1},legendVect{2},legendVect{3})
-for cueTypeCurr = 1:length(cueTypeCell)
 plot(log10(StimLevels),dataStruct.(cueTypeCell{cueTypeCurr}).propCorr,markerTypeVect{cueTypeCurr},'MarkerEdgeColor',colorVect(cueTypeCurr,:))
+plot(xCurveLog,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFit.params,xCurve),'Color',colorVect(cueTypeCurr,:))
 end
 title(sprintf('All'))
 axis(axisVect)
@@ -185,11 +180,8 @@ hold off
 currFig = currFig+1;
 figure(currFig), clf, hold on
 for cueTypeCurr = 1:length(cueTypeCell)
-plot(xCurveLog,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFitExcludeMiss.params,xCurve),'Color',colorVect(cueTypeCurr,:))
-end
-legend(legendVect{1},legendVect{2},legendVect{3})
-for cueTypeCurr = 1:length(cueTypeCell)
 plot(log10(StimLevels),dataStruct.(cueTypeCell{cueTypeCurr}).propCorrExcludeMiss,markerTypeVect{cueTypeCurr},'MarkerEdgeColor',colorVect(cueTypeCurr,:))
+plot(xCurveLog,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFitExcludeMiss.params,xCurve),'Color',colorVect(cueTypeCurr,:))
 end
 title(sprintf('All - Exclude Miss'))
 axis(axisVect)
@@ -200,12 +192,9 @@ hold off
 currFig = currFig+1;
 figure(currFig), clf, hold on
 for cueTypeCurr = 1:length(cueTypeCell)
+
 plot(xCurve,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFit.params,xCurve),'Color',colorVect(cueTypeCurr,:))
-end
-legend(legendVect{1},legendVect{2},legendVect{3})
-for cueTypeCurr = 1:length(cueTypeCell)
-plot(StimLevels,dataStruct.(cueTypeCell{cueTypeCurr}).propCorr,markerTypeVect{cueTypeCurr},'MarkerEdgeColor',colorVect(cueTypeCurr,:))
-end
+endplot(StimLevels,dataStruct.(cueTypeCell{cueTypeCurr}).propCorr,markerTypeVect{cueTypeCurr},'MarkerEdgeColor',colorVect(cueTypeCurr,:))
 title(sprintf('All'))
 axis(axisVect2)
 hold off
@@ -215,11 +204,8 @@ hold off
 currFig = currFig+1;
 figure(currFig), clf, hold on
 for cueTypeCurr = 1:length(cueTypeCell)
-plot(xCurve,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFitExcludeMiss.params,xCurve),'Color',colorVect(cueTypeCurr,:))
-end
-legend(legendVect{1},legendVect{2},legendVect{3})
-for cueTypeCurr = 1:length(cueTypeCell)
 plot(StimLevels,dataStruct.(cueTypeCell{cueTypeCurr}).propCorrExcludeMiss,markerTypeVect{cueTypeCurr},'MarkerEdgeColor',colorVect(cueTypeCurr,:))
+plot(xCurve,PF(dataStruct.(cueTypeCell{cueTypeCurr}).propCorrFitExcludeMiss.params,xCurve),'Color',colorVect(cueTypeCurr,:))
 end
 title(sprintf('All - Exclude Miss'))
 axis(axisVect2)
